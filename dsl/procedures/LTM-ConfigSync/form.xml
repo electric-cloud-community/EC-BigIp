@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+     Copyright 2019 CloudBees, Inc.
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+
+-->
+<editor>
+  <help>/commander/pages/@PLUGIN_NAME@/help?s=Administration&amp;ss=Plugins#LTM-Configsync</help>
+
+  <formElement>
+    <documentation>Previously defined plugin configuration.</documentation>
+    <label>Configuration Name:</label>
+    <property>config</property>
+    <propertyReference>/plugins/@PLUGIN_NAME@/project/ec_plugin_cfgs</propertyReference>
+    <required>1</required>
+    <configuration>1</configuration>
+    <type>entry</type>
+  </formElement>
+
+  <formElement>
+    <documentation>Name of the Sync-Failover or Sync-Only device group.</documentation>
+    <label>Device Group Name:</label>
+    <property>deviceGroup</property>
+    <required>1</required>
+    <type>entry</type>
+    <value/>
+  </formElement>
+
+  <formElement>
+    <documentation>Results will be saved into this property/property sheet.</documentation>
+    <label>Result Property Sheet:</label>
+    <property>resultPropertySheet</property>
+    <required>0</required>
+    <type>entry</type>
+    <value>/myJob/configSync</value>
+  </formElement>
+</editor>

@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+     Copyright 2019 CloudBees, Inc.
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+
+-->
+<editor>
+
+  <help>/commander/pages/@PLUGIN_NAME@/help?s=Administration&amp;ss=Plugins#LTM-CreateOrUpdatePoolMember</help>
+
+  <formElement>
+    <documentation>Previously defined plugin configuration.</documentation>
+    <label>Configuration Name:</label>
+    <property>config</property>
+    <propertyReference>/plugins/@PLUGIN_NAME@/project/ec_plugin_cfgs</propertyReference>
+    <required>1</required>
+    <configuration>1</configuration>
+    <type>entry</type>
+  </formElement>
+
+  <formElement>
+    <htmlDocumentation>
+This parameter controls the update of a balancing pool member if one with the same name exists already:
+<ul><li><b><code>Do Nothing</code></b> <i>(Default)</i> -- Take no action, return silently.</li><li><b><code>Remove and Create</code></b> -- Remove existing balancing pool and Create a new one.</li><li><b><code>Selective Update</code></b> -- Update existing balancing pool for only parameters which have changed.</li><li><b><code>Throw exception</code></b> -- Do not update. Throw an error.</li></ul>
+    </htmlDocumentation>
+    <label>Update Action:</label>
+    <option>
+      <name>Do Nothing</name>
+      <value>0</value>
+    </option>
+    <option>
+      <name>Selective Update</name>
+      <value>PATCH</value>
+    </option>
+    <option>
+      <name>Remove and Create</name>
+      <value>PUT</value>
+    </option>
+    <option>
+      <name>Throw exception</name>
+      <value>ERROR</value>
+    </option>
+    <property>updateAction</property>
+    <required>1</required>
+    <type>select</type>
+    <value>0</value>
+  </formElement>
+
+  <formElement>
+    <documentation>Name of the partition.</documentation>
+    <label>Partition Name:</label>
+    <property>partition</property>
+    <required>1</required>
+    <type>entry</type>
+    <value/>
+  </formElement>
+
+  <formElement>
+    <documentation>Name of the balancing pool.</documentation>
+    <label>Pool Name:</label>
+    <property>pool_name</property>
+    <required>1</required>
+    <type>entry</type>
+    <value/>
+  </formElement>
+
+  <formElement>
+    <documentation>A name for this member.</documentation>
+    <label>Member Name:</label>
+    <property>name</property>
+    <required>1</required>
+    <type>entry</type>
+    <value/>
+  </formElement>
+
+  <!-- <formElement>
+    <documentation>IP address of a pool member if a node by the given name does not already exist.</documentation>
+    <label>IP Address:</label>
+    <property>address</property>
+    <required>0</required>
+    <type>entry</type>
+    <value/>
+  </formElement>
+
+  <formElement>
+    <documentation>The application service to which the object belongs.</documentation>
+    <label>Application Service:</label>
+    <property>appService</property>
+    <required>0</required>
+    <type>entry</type>
+    <value/>
+  </formElement>
+
+  <formElement>
+    <documentation>Specifies the maximum number of concurrent connections allowed for a pool member. The default value is 0 (zero).</documentation>
+    <label>Connection Limit:</label>
+    <property>connectionLimit</property>
+    <required>0</required>
+    <type>entry</type>
+    <value/>
+  </formElement>
+
+  <formElement>
+    <documentation>User defined description.</documentation>
+    <label>Description:</label>
+    <property>description</property>
+    <required>0</required>
+    <type>entry</type>
+    <value/>
+  </formElement>
+
+  <formElement>
+    <documentation>Specifies a range of numbers that you want the system to use in conjunction with the ratio load balancing method. The default value is 1.</documentation>
+    <label>Dynamic Ratio:</label>
+    <property>dynamicRatio</property>
+    <required>0</required>
+    <type>entry</type>
+    <value/>
+  </formElement>
+
+  <formElement>
+    <documentation>Specifies if member is ephemeral.</documentation>
+    <label>Ephemeral:</label>
+    <property>ephemeral</property>
+    <required>0</required>
+    <type>entry</type>
+    <value/>
+  </formElement>
+
+  <formElement>
+    <documentation>Specifies whether the pool member inherits the encapsulation profile from the parent pool. The default value is enabled. If you disable inheritance, no encapsulation takes place, unless you specify another encapsulation profile for the pool member using the profiles attribute.</documentation>
+    <label>Inherit Profile:</label>
+    <property>inheritProfile</property>
+    <required>0</required>
+    <type>entry</type>
+    <value/>
+  </formElement>
+
+  <formElement>
+    <documentation>Specifies whether the pool member's monitor(s) actions will be logged. Logs are stored in /var/log/monitors/.</documentation>
+    <label>Logging:</label>
+    <property>logging</property>
+    <required>0</required>
+    <type>entry</type>
+    <value/>
+  </formElement>
+
+  <formElement>
+    <documentation>Displays the health monitors that are configured to monitor the pool member, and the status of each monitor. The default value is default.</documentation>
+    <label>Monitor:</label>
+    <property>monitor</property>
+    <required>0</required>
+    <type>entry</type>
+    <value/>
+  </formElement>
+
+  <formElement>
+    <documentation>Specifies the priority group within the pool for this pool member. The priority group number specifies that traffic is directed to that member before being directed to a member of a lower priority. The default value is 0.</documentation>
+    <label>Priority Group:</label>
+    <property>priorityGroup</property>
+    <required>0</required>
+    <type>entry</type>
+    <value/>
+  </formElement>
+
+  <formElement>
+    <documentation>Specifies the maximum number of connections per second allowed for a pool member.</documentation>
+    <label>Rate Limit:</label>
+    <property>rateLimit</property>
+    <required>0</required>
+    <type>entry</type>
+    <value/>
+  </formElement>
+
+  <formElement>
+    <documentation>Specifies the ratio weight that you want to assign to the pool member. The default value is 1.</documentation>
+    <label>Ratio:</label>
+    <property>ratio</property>
+    <required>0</required>
+    <type>entry</type>
+    <value/>
+  </formElement>
+
+  <formElement>
+    <documentation>Enables or disables the pool member for new sessions. The default value is user-enabled.</documentation>
+    <label>Session:</label>
+    <property>session</property>
+    <required>0</required>
+    <type>entry</type>
+    <value/>
+  </formElement>
+
+  <formElement>
+    <documentation>user-down forces the pool member offline, overriding monitors. user-up reverts the user-down. When user-up, this displays the monitor state.</documentation>
+    <label>State:</label>
+    <property>state</property>
+    <required>0</required>
+    <type>entry</type>
+    <value/>
+  </formElement>
+
+  <formElement>
+    <htmlDocumentation>
+Not described in the official documentation. 
+Introduced: <a href="https://devcentral.f5.com/wiki/iControlREST.New-In-Version-13-0-0.ashx?NoRedirect=1">BIG-IP_v13.0.0</a>
+    </htmlDocumentation>
+    <label>Traffic Accelerator Status:</label>
+    <property>trafficAccelerationStatus</property>
+    <required>0</required>
+    <type>entry</type>
+    <value/>
+  </formElement> -->
+
+  <formElement>
+    <type>textarea</type>
+    <label>Optional Parameters:</label>
+    <property>optionalParameters</property>
+    <required>0</required>
+
+    <collection>1</collection>
+    <collectionName>Parameter</collectionName>
+    <collectionValue>Value</collectionValue>
+    <collectionValueRequired>0</collectionValueRequired>
+
+    <collectionEntrySeparator>;</collectionEntrySeparator>
+    <collectionValueSeparator>=</collectionValueSeparator>
+    <documentation>
+Available parameters:
+* description - User defined description.
+* address - IP address of a pool member if a node by the given name does not already exist.
+* appService - The application service to which the object belongs.
+* connectionLimit - Specifies the maximum number of concurrent connections allowed for a pool member. The default value is 0 (zero).
+* dynamicRatio - Specifies a range of numbers that you want the system to use in conjunction with the ratio load balancing method. The default value is 1.
+* ephemeral - Specifies if member is ephemeral.
+* inheritProfile - Specifies whether the pool member inherits the encapsulation profile from the parent pool. The default value is enabled. If you disable inheritance, no encapsulation takes place, unless you specify another encapsulation profile for the pool member using the profiles attribute.
+* logging - Specifies whether the pool member's monitor(s) actions will be logged. Logs are stored in /var/log/monitors/.
+* monitor - Displays the health monitors that are configured to monitor the pool member, and the status of each monitor. The default value is default.
+* priorityGroup - Specifies the priority group within the pool for this pool member. The priority group number specifies that traffic is directed to that member before being directed to a member of a lower priority. The default value is 0.
+* rateLimit - Specifies the maximum number of connections per second allowed for a pool member.
+* ratio - Specifies the ratio weight that you want to assign to the pool member. The default value is 1.
+* session - Enables or disables the pool member for new sessions. The default value is user-enabled.
+* state - user-down forces the pool member offline, overriding monitors. user-up reverts the user-down. When user-up, this displays the monitor state.
+* trafficAccelerationStatus - Not described in the official documentation. Please consult: F5 Support
+    </documentation>
+  </formElement>
+
+  <formElement>
+    <documentation>Results will be saved into this property/property sheet.</documentation>
+    <label>Result Property Sheet:</label>
+    <property>resultPropertySheet</property>
+    <required>1</required>
+    <type>entry</type>
+    <value>/myJob/poolMemberCreateOrUpdate</value>
+  </formElement>
+</editor>

@@ -1,0 +1,160 @@
+<!--
+
+     Copyright 2019 CloudBees, Inc.
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+
+-->
+<editor>
+
+    <help>https://docs.cloudbees.com/docs/cloudbees-cd/latest/plugins/ec-bigip#CreateConfiguration</help>
+
+    <formElement>
+        <type>entry</type>
+        <label>Configuration Name:</label>
+        <property>config</property>
+        <configuration>1</configuration>
+        <propertyReference>/plugins/@PLUGIN_NAME@/project/ec_plugin_cfgs</propertyReference>
+        <required>1</required>
+        <documentation>The name for the created configuration.</documentation>
+    </formElement>
+
+     <formElement>
+        <type>entry</type>
+        <label>Description:</label>
+        <property>desc</property>
+        <required>0</required>
+        <documentation>Description for the configuration.</documentation>
+    </formElement>
+
+    <formElement>
+        <type>select</type>
+        <label>Protocol:</label>
+        <property>protocol</property>
+        <required>1</required>
+        <value>http</value>
+        <option>
+            <value>http</value>
+            <name>http</name>
+        </option>
+        <option>
+            <value>https</value>
+            <name>https</name>
+        </option>
+        <documentation>Specifies whether to preceed hostname with https:// or leave http://</documentation>
+    </formElement>
+
+    <formElement>
+        <type>entry</type>
+        <label>Host:</label>
+        <property>host</property>
+        <required>1</required>
+        <documentation>Host name of the iControlREST API instance.</documentation>
+    </formElement>
+
+    <formElement>
+        <type>entry</type>
+        <label>URL Path to API:</label>
+        <property>urlPath</property>
+        <required>0</required>
+        <htmlDocumentation>
+<p>URL Base Path to iControlREST (if any) that needs to be added to
+<code>&lt;protocol&gt;://&lt;host&gt;:&lt;port&gt;</code>
+in order to resolve the endpoint.</p>
+<p>For example if the URL path to iControlREST is <code>http://myhost:2000/f5</code> enter <code>/f5</code>
+and if the URL path to iControlREST is <code>http://myhost:2000</code> leave this field blank.</p>
+        </htmlDocumentation>
+    </formElement>
+
+    <formElement>
+        <type>entry</type>
+        <label>API server port:</label>
+        <property>port</property>
+        <required>1</required>
+        <documentation>Server port for example 443.</documentation>
+    </formElement>
+
+    <formElement>
+        <type>select</type>
+        <label>Type Of Authentication:</label>
+        <property>authenticationType</property>
+        <required>0</required>
+        <value>basic</value>
+        <option>
+            <value>basic</value>
+            <name>HTTP BASIC Authentication</name>
+        </option>
+        <option>
+            <value>tba</value>
+            <name>Token Based Authentication</name>
+        </option>
+        <documentation>Specifies how a particular consumer is authenticated to the system.</documentation>
+    </formElement>
+
+    <formElement>
+        <type>credential</type>
+        <label>BigIp API Credentials:</label>
+        <property>credential</property>
+        <required>1</required>
+        <documentation>Enter credentials required to perform basic authentication.</documentation>
+    </formElement>
+
+    <formElement>
+        <type>entry</type>
+        <label>Authentication Provider:</label>
+        <property>authenticationProvider</property>
+        <required>0</required>
+        <value>tmos</value>
+        <documentation>The identifier of the internal or external authentication provider: local, tmos.</documentation>
+        <dependsOn>authenticationType</dependsOn>
+        <condition>${authenticationType} == 'tba'</condition>
+    </formElement>
+
+    <formElement>
+        <type>checkbox</type>
+        <label>Check Connection?:</label>
+        <property>attemptConnection</property>
+        <required>0</required>
+        <checkedValue>1</checkedValue>
+        <uncheckedValue>0</uncheckedValue>
+        <initiallyChecked>1</initiallyChecked>
+        <configurable>1</configurable>
+        <documentation>If checked, the configuration will be saved only if the test request with given credentials succeeds.</documentation>
+    </formElement>
+
+    <formElement>
+        <type>select</type>
+        <label>Debug Level:</label>
+        <property>debugLevel</property>
+        <required>0</required>
+        <value>0</value>
+        <option>
+            <value>-1</value>
+            <name>Error</name>
+        </option>
+        <option>
+            <value>0</value>
+            <name>Info</name>
+        </option>
+        <option>
+            <value>1</value>
+            <name>Debug</name>
+        </option>
+        <option>
+            <value>2</value>
+            <name>Trace</name>
+        </option>
+        <documentation>This option sets debug level for logs. If info is selected, only summary information will be shown, for debug, there will be some debug information and for trace the whole requests and responses will be shown.</documentation>
+    </formElement>
+
+</editor>

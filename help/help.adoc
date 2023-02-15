@@ -1,0 +1,407 @@
+
+Plugin version @PLUGIN_VERSION@
+
+Revised on Feb 24, 2021
+
+[[DocumentConvention]]
+
+
+== Document convention
+
+In all plugin procedures, parameter description for mandatory/required parameters are shown in *_bold italics_*.
+
+[[CreateConfiguration]]
+
+
+== Plugin configurations
+
+Plugin configurations are sets of parameters that apply across some or all of the plugin procedures. They reduce repetition of common values, create predefined parameter sets for end users, and securely store credentials where needed. Each configuration is given a unique name that is entered in designated parameters on procedures that use them.
+
+
+== Creating plugin configurations
+
+To create plugin configurations in {CD}, do these steps:
+
+* Go to *Administration* > *Plugins* to open the Plugin Manager.
+* Find the @PLUGIN_NAME@ row.
+* Click *Configure* to open the Configurations page.
+* Click *Create Configuration*.
+
+Configuration Parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|Configuration Name |The name for the created configuration.
+|Description |Description for the configuration.
+|Protocol |Specifies whether to preceed hostname with https:// or leave http://
+|Host |Host name of the iControlREST API instance.
+|URL Path to API a|
+URL Base Path to iControlREST (if any) that needs to be added to `<protocol>://<host>:<port>` in order to resolve the endpoint.
+
+For example if the URL path to iControlREST is `+http://myhost:2000/f5+` enter `/f5` and if the URL path to iControlREST is `+http://myhost:2000+` leave this field blank.
+
+|API server port |Server port for example 443
+|Type Of Authentication a|
+Specifies how a particular consumer is authenticated to the system.
+
+* HTTP BASIC Authentication
+* Token Based Authentication
+
+|BigIp API Credentials |Enter credentials required to perform basic authentication.
+|Authentication Provider |The identifier of the internal or external authentication provider: local, tmos.
+
+Depends on Token Based Authentication.
+|Check Connection? |If checked, the configuration will be saved only if the test request with given credentials succeeds.
+|Debug Level |This option sets debug level for logs. If info is selected, only summary information will be shown, for debug, there will be some debug information and for trace the whole requests and responses will be shown.
+|===
+
+=== Configuration form
+
+image::cloudbees-common-sda::cd-plugins/ec-bigip/createconfiguration.png[image]
+
+image::cloudbees-common-sda::cd-plugins/ec-bigip/createconfiguration01.png[image]
+
+image::cloudbees-common-sda::cd-plugins/ec-bigip/createconfiguration02.png[image]
+
+[[procedures]]
+== Plugin procedures
+
+[[LTM-Configsync]]
+=== LTM - config sync
+
+Synchronizes the local BIG-IP device to the device group
+
+==== LTM - config sync parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|Configuration Name |Previously defined plugin configuration.
+|Device Group Name |Name of the Sync-Failover or Sync-Only device group
+|Result Property Sheet |Results will be saved into this property/property sheet
+|===
+
+==== Form sample
+
+image::cloudbees-common-sda::cd-plugins/ec-bigip/configsync.png[image]
+
+
+[[LTM-CreateOrUpdateBalancingPool]]
+=== LTM - create or update balancing pool
+
+Create or update balancing pool configuration
+
+==== LTM - create or update balancing pool parameters
+
+[width="100%",cols="50%,50%",options="header",]
+|===
+|Parameter |Description
+|Configuration Name |Previously defined plugin configuration.
+|Update Action a|
+This parameter controls the update of a balancing pool if one with the same name exists already:
+
+* *`Do Nothing`* _(Default)_ -- Take no action, return silently.
+* *`Remove and Create`* -- Remove existing balancing pool and Create a new one.
+* *`Selective Update`* -- Update existing balancing pool for only parameters which have changed.
+* *`Throw exception`* -- Do not update. Throw an error.
+
+|Partition Name |Name of the partition.
+|Pool Name |Name of the balancing pool.
+|Optional Parameters a|
+Semicolon separated list of values in the format *parameter=value* Available parameters:
+
+* description - User defined description.
+* allowNat - Specifies whether the pool can load balance NAT connections. The default value is yes.
+* allowSnat - Specifies whether the pool can load balance SNAT connections. The default value is yes.
+* appService - The application service to which the object belongs.
+* autoscaleGroupId - Autoscale-group ID to which pool members belong to.
+* gatewayFailsafeDevice - Specifies that the pool is a gateway failsafe pool in a redundant configuration. This string identifies the device that will failover when the monitor reports the pool member down. By default the device string is empty.
+* ignorePersistedWeight - Do not count the weight of persisted connections on pool members when making load balancing decisions.
+* ipTosToClient - Specifies the Type of Service (ToS) level to use when sending packets to a client. 65534 (mimic) specifies that the system sets the ToS level of outgoing packets to the same ToS level of the most-recently received incoming packet. The default value is 65535 (pass-through).
+* ipTosToServer - Specifies the Type of Service (ToS) level to use when sending packets to a server. 65534 (mimic) specifies that the system sets the ToS level of outgoing packets to the same ToS level of the most-recently received incoming packet. The default value is 65535 (pass-through).
+* linkQosToClient - Specifies the Quality of Service (QoS) level to use when sending packets to a client. The default value is 65535 (pass-through).
+* linkQosToServer - Specifies the Quality of Service (QoS) level to use when sending packets to a server. The default value is 65535 (pass-through).
+* loadBalancingMode - Specifies the modes that the system uses to load balance name resolution requests among the members of this pool. See "help pool" for a description of each loading balancing mode.
+* minActiveMembers - Specifies the minimum number of members that must be up for traffic to be confined to a priority group when using priority-based activation. The default value is 0 (zero). An active member is a member that is up (not marked down) and is handling fewer connections than its connection limit.
+* minUpMembers - Specifies the minimum number of pool members that must be up; otherwise, the system takes the action specified in the min-up-members-action option. Use this option for gateway pools in a redundant system where a unit number is applied to a pool. This indicates that the pool is only configured on the specified unit.
+* minUpMembersAction - Specifies the action to take if the min-up-members-checking is enabled and the number of active pool members falls below the number specified in min-up-members. The default value is failover.
+* minUpMembersChecking - Enables or disables the min-up-members feature. If you enable this feature, you must also specify a value for both the min-up-members and min-up-members-action options.
+* monitor - Specifies the health monitors that the system uses to determine whether it can use this pool for load balancing. The monitor marks the pool up or down based on whether the monitor(s) are successful. You can specify a single monitor, multiple monitors "http and https", or a "min" rule, "min 1 of \{ http https }". You may remove the monitor by specifying "none".
+* tmPartition - Displays the administrative partition within which the pool resides.
+* queueDepthLimit - Specifies the maximum number of connections that may simultaneously be queued to go to any member of this pool. The default is zero which indicates there is no limit.
+* queueOnConnectionLimit - Enable or disable queuing connections when pool member or node connection limits are reached. When queuing is not enabled, new connections are reset when connection limits are met.
+* queueTimeLimit - Specifies the maximum time, in milliseconds, a connection will remain enqueued. The default is zero which indicates there is no limit.
+* reselectTries - Specifies the number of times the system tries to contact a pool member after a passive failure. A passive failure consists of a server-connect failure or a failure to receive a data response within a user-specified interval. The default is 0 (zero), which indicates no reselect attempts.
+* serviceDownAction - Specifies the action to take if the service specified in the pool is marked down. The default value is none.
+* slowRampTime - Specifies, in seconds, the ramp time for the pool. This provides the ability to cause a pool member that has just been enabled, or marked up, to receive proportionally less traffic than other members in the pool. The proportion of traffic the member accepts is determined by how long the member has been up in comparison to the slow-ramp-time setting for the pool. For example, if the load-balancing-mode of a pool is round-robin, and it has a slow-ramp-time of 60 seconds, when a pool member has been up for only 30 seconds, the pool member receives approximately half the amount of new traffic as other pool members that have been up for more than 60 seconds. After the pool member has been up for 45 seconds, it receives approximately three quarters of the new traffic. The slow ramp time is particularly useful when used with the least-connections-member load balancing mode. The default value is 10.
+* trafficAccelerationStatus - Not described in the official documentation. Please consult: https://support.f5.com/[F5 Support]
+
+|Result Property Sheet |Results will be saved into this property/property sheet.
+|===
+
+===== Form Sample
+
+image::cloudbees-common-sda::cd-plugins/ec-bigip/createorupdatepool.png[image]
+
+[[LTM-Getpoollist]]
+=== LTM - get pool list
+
+Get balancing pool list
+
+==== LTM - get pool list parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|Configuration Name |Previously defined plugin configuration.
+|Result Property Sheet |Results will be saved into this property/property sheet.
+|===
+
+===== Form Sample
+
+image::cloudbees-common-sda::cd-plugins/ec-bigip/getpoolslist.png[image]
+
+[[LTM-Getbalancingpool]]
+=== LTM - get balancing pool
+
+Get pool configuration
+
+==== LTM - get balancing pool parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|Configuration Name |Previously defined plugin configuration.
+|Partition Name |Name of the partition.
+|Pool Name |Name of the balancing pool.
+|Result Property Sheet |Results will be saved into this property/property sheet.
+|===
+
+===== Form Sample
+
+image::cloudbees-common-sda::cd-plugins/ec-bigip/getbalancingpool.png[image]
+
+[[LTM-Deletebalancingpool]]
+=== LTM - delete balancing pool
+
+Delete balancing pool configuration
+
+==== LTM - delete balancing pool parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|Configuration Name |Previously defined plugin configuration.
+|Partition Name |Name of the partition.
+|Pool Name |Name of the balancing pool.
+|Result Property Sheet |Results will be saved into this property/property sheet.
+|===
+
+===== Form Sample
+
+image::cloudbees-common-sda::cd-plugins/ec-bigip/deletebalancingpool.png[image]
+
+[[Pool_member_operations]]
+=== Pool member operations
+
+[[LTM-CreateOrUpdatePoolMember]]
+==== LTM - create or update pool member
+
+Create the set of pool members that are associated with a load balancing pool
+
+==== LTM - create or update pool member parameters
+
+[width="100%",cols="50%,50%",options="header",]
+|===
+|Parameter |Description
+|Configuration Name |Previously defined plugin configuration.
+|Update Action a|
+This parameter controls the update of a balancing pool member if one with the same name exists already:
+
+* *`Do Nothing`* _(Default)_ -- Take no action, return silently.
+* *`Remove and Create`* -- Remove existing balancing pool member and Create a new one.
+* *`Selective Update`* -- Update existing balancing pool member for only parameters which have changed.
+* *`Throw exception`* -- Do not update. Throw an error.
+
+|Partition Name |Name of the partition.
+|Pool Name |Name of the balancing pool.
+|Member Name |A name for this member.
+|Optional Parameters a|
+Semicolon separated list of values in the format *parameter=value* Available parameters:
+
+* description - User defined description.
+* address - IP address of a pool member if a node by the given name does not already exist.
+* appService - The application service to which the object belongs.
+* connectionLimit - Specifies the maximum number of concurrent connections allowed for a pool member. The default value is 0 (zero).
+* dynamicRatio - Specifies a range of numbers that you want the system to use in conjunction with the ratio load balancing method. The default value is 1.
+* ephemeral - Specifies if member is ephemeral.
+* inheritProfile - Specifies whether the pool member inherits the encapsulation profile from the parent pool. The default value is enabled. If you disable inheritance, no encapsulation takes place, unless you specify another encapsulation profile for the pool member using the profiles attribute.
+* logging - Specifies whether the pool member's monitor(s) actions will be logged. Logs are stored in /var/log/monitors/.
+* monitor - Displays the health monitors that are configured to monitor the pool member, and the status of each monitor. The default value is default.
+* priorityGroup - Specifies the priority group within the pool for this pool member. The priority group number specifies that traffic is directed to that member before being directed to a member of a lower priority. The default value is 0.
+* rateLimit - Specifies the maximum number of connections per second allowed for a pool member.
+* ratio - Specifies the ratio weight that you want to assign to the pool member. The default value is 1.
+* session - Enables or disables the pool member for new sessions. The default value is user-enabled.
+* state - user-down forces the pool member offline, overriding monitors. user-up reverts the user-down. When user-up, this displays the monitor state.
+* trafficAccelerationStatus - Not described in the official documentation. Please consult: F5 Support
+
+|Result Property Sheet |Results will be saved into this property/property sheet.
+|===
+
+===== Form Sample
+
+image::cloudbees-common-sda::cd-plugins/ec-bigip/createorupdatemember.png[image]
+
+[[LTM-Changepoolmemberstatus]]
+=== LTM - change pool member status
+
+Change pool member status
+
+==== LTM - change pool member status parameters
+
+[width="100%",cols="50%,50%",options="header",]
+|===
+|Parameter |Description
+|Configuration Name |Previously defined plugin configuration.
+|Partition Name |Name of the partition.
+|Pool Name |Name of the balancing pool.
+|Member Name |Name of the member.
+|Status a|
+Desired status of the pool member:
+
+* Enabled (All traffic allowed)
+* Disabled (Only persistent or active connections allowed)
+* Forced Offline (Only active connections allowed)
+
+Details:
+
+* https://devcentral.f5.com/articles/icontrol-rest-working-with-pool-members[iControl REST: Working with Pool Members]
+* https://support.f5.com/csp/article/K13310[K13310: Disabling nodes or pool members for maintenance (11.x - 14.x)]
+
+|Result Property Sheet |Results will be saved into this property/property sheet.
+|===
+
+===== Form Sample
+
+image::cloudbees-common-sda::cd-plugins/ec-bigip/changememberstatus.png[image]
+
+[[LTM-Getmemberlist]]
+=== LTM - get member list
+
+Get all pool members that make up a load balancing pool
+
+==== LTM - get member list parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|Configuration Name |Previously defined plugin configuration.
+|Partition Name |Name of the partition.
+|Pool Name |Name of the balancing pool.
+|Result Property Sheet |Results will be saved into this property/property sheet.
+|===
+
+===== Form Sample
+
+image::cloudbees-common-sda::cd-plugins/ec-bigip/getmemberlist.png[image]
+
+[[LTM-Getpoolmember]]
+=== LTM - get pool member
+
+Get a specified pool member from a load balancing pool
+
+==== LTM - get pool member parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|Configuration Name |Previously defined plugin configuration.
+|Partition Name |Name of the partition.
+|Pool Name |Name of the balancing pool.
+|Member Name |A name for this member.
+|Result Property Sheet |Results will be saved into this property/property sheet.
+|===
+
+===== Form Sample
+
+image::cloudbees-common-sda::cd-plugins/ec-bigip/getpoolmember.png[image]
+
+[[LTM-Deletepoolmember]]
+=== LTM - delete pool member
+
+Delete a specified pool member from a load balancing pool
+
+==== LTM - delete pool member parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|Configuration Name |Previously defined plugin configuration.
+|Partition Name |Name of the partition.
+|Pool Name |Name of the balancing pool.
+|Member Name |A name for this member.
+|Result Property Sheet |Results will be saved into this property/property sheet.
+|===
+
+===== Form Sample
+
+image::cloudbees-common-sda::cd-plugins/ec-bigip/deletepoolmember.png[image]
+
+[[rns]]
+== Release notes
+
+=== EC-BigIp 3.1.2
+
+Authentication token is renewed after the step is finished.
+
+=== EC-BigIp 3.1.1
+
+Improved error details in case of failure
+
+=== EC-BigIp 3.1.0
+
+Add checking connection while creating/editing a configuration
+
+Add Token Based Authentication
+
+=== EC-BigIp 3.0.1
+
+Renaming  to "CloudBees"
+
+Remove excessive information from help
+
+=== EC-BigIp 3.0.0
+
+NOTE: Procedure Interfaces in this version of the Plugin have been changed for Usability and Robustness. If a previous major version (i.e., version <= 2.X) of this plugin exists in your environment, this version of the plugin will not promote, until you demote the previous major version. This approach is taken in order to provide you with an opportunity to understand refactoring impacts upon upgrade. Please make sure you understand the impact before upgrading to this version of the plugin. The following is the list of key changes made to this plugin.
+
+* New procedure *LTM - Config sync*.
+* New Field Update Action added to *LTM - Create or update balancing pool* to control update behavior.
+* New Field Update Action added to *LTM - Create or update pool member* to control update behavior.
+* Existing procedure *LTM - Manage balancing pool removed*.
+* Existing procedure *LTM - Manage pool member removed*.
+
+=== EC-BigIp 2.0.2
+
+* The plugin icon has been updated.
+
+=== EC-BigIp 2.0.1
+
+* Documentation cleanup.
+
+=== EC-BigIp 2.0.0
+
+* Plugin revision.
+
+=== EC-BigIp 1.0.2
+
+* Added new parameter 'Path to BigIp' for all procedures.
+
+=== EC-BigIp 1.0.1
+
+* Fixed the step picker for procedure "Add Members to Pool"
+
+=== EC-BigIp 1.0.0
+
+* 4.1 XML parameter panels ready.
+* 4.1 help page format ready.
