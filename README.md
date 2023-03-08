@@ -31,30 +31,7 @@ of common values, create predefined parameter sets, and securely store
 credentials. Each configuration is given a unique name that is entered
 in the designated parameter for the plugin procedures that use them.
 
-### Creating plugin configurations
-
-To create plugin configurations in CloudBees CD/RO, complete the
-following steps:
-
-1.  Navigate to DevOps Essentials &gt; Plugin Management &gt; Plugin
-    configurations.
-
-2.  Select **Add plugin configuration** to create a new configuration.
-
-3.  In the **New Configuration** window, specify a **Name** for the
-    configuration.
-
-4.  Select the **Project** that the configuration belongs to.
-
-5.  Optionally, add a **Description** for the configuration.
-
-6.  Select the appropriate **Plugin** for the configuration.
-
-7.  Configure the parameters per the descriptions below.
-
-You may need to create additional configurations later.
-
-Configuration Parameters
+## Configuration Parameters
 
 <table>
 <colgroup>
